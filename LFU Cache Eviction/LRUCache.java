@@ -1,70 +1,60 @@
+import java.util.HashMap;
+import java.util.Map;
+
 class LRUCache {
+    private int cap;
+    private Map<Integer, Node> cacheMap;
+    private Node oldest;
+    private Node newest;
 
-    private int cap;                          // Maximum capacity
-    private Map<Integer, Node> cache;         // Key → Node
-    private Node oldest;                      // Dummy head (LRU end)
-    private Node latest;                      // Dummy tail (MRU end)
-
-    // Constructor
-    public LRUCache(int capacity) {
-        this.cap = capacity;
-        this.cache = new HashMap<>();
-
-        oldest = new Node(0, 0);  // Dummy head
-        latest = new Node(0, 0);  // Dummy tail
-
-        oldest.next = latest;
-        latest.prev = oldest;
+    public LRUCache(int cap) {
+        this.cap = cap;
+        this.cacheMap = new HashMap<>();
+        oldest = new Node(0,0);
+        newest = new Node(0, 0);
+        oldest.next=newest;
+        newest.prev=oldest;
     }
 
-    // Get value by key
     public int get(int key) {
-        if (!cache.containsKey(key)) {
+        if(!cacheMap.containsKey(key)) {
             return -1;
-        }
 
-        Node node = cache.get(key);
-        remove(node);   // Remove from current position
-        insert(node);   // Move to MRU
-        return node.val;
+        }
+        Node n = cacheMap.get(key);
+        remove(n);
+        insert(n);
+        return n.val;
     }
 
-    // Put key-value pair
-    public void put(int key, int value) {
-        if (cache.containsKey(key)) {
-            Node oldNode = cache.get(key);
-            remove(oldNode);
+    public void put(int key, int val) {
+        if (cacheMap.containsKey(key)) {
+            Node existingNode = cacheMap.get(key);
+            remove(existingNode);
         }
-
-        Node newNode = new Node(key, value);
-        cache.put(key, newNode);
+        Node newNode = new Node(key, val);
+        cacheMap.put(key, newNode);
         insert(newNode);
-
-        // Evict LRU if capacity exceeded
-        if (cache.size() > cap) {
-            Node lru = oldest.next;   // First real node
+        if(cacheMap.size()>cap){
+            Node lru = oldest.next;
             remove(lru);
-            cache.remove(lru.key);
+            cacheMap.remove(lru.key);
         }
     }
 
-    // Insert node before dummy tail (MRU)
-    private void insert(Node node) {
-        Node prev = latest.prev;
-
-        prev.next = node;
-        node.prev = prev;
-
-        node.next = latest;
-        latest.prev = node;
+    public void insert(Node n) {
+        Node mru = newest.prev;
+        mru.next = n;
+        n.prev = mru;
+        n.next = newest;
+        newest.prev = n;
     }
 
-    // Remove node from list
-    private void remove(Node node) {
-        Node prev = node.prev;
-        Node next = node.next;
-
-        prev.next = next;
-        next.prev = prev;
+    public void remove(Node n) {
+        Node prv = n.prev;
+        Node nxt = n.next;
+        prv.next = nxt;
+        nxt.prev = prv;
     }
+
 }

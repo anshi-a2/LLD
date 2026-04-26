@@ -1,13 +1,13 @@
-class Node {
+class Node{
     int key;
-    int value;
-    int freq;
+    int val;
     Node prev;
     Node next;
 
-    Node(int key, int value) {
-        this.key = key;
-        this.value = value;
-        this.freq = 1;
+    public Node(int ky, int val) {
+        this.key = ky;
+        this.val = val;
+
     }
+
 }
