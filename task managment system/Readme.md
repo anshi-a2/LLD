@@ -85,7 +85,7 @@ manager.addCommentToTask(task.getId(), new Comment("Started working on this", bo
 
 ## Demo
 
-See `TaskManagementSystemDemo.java` for a sample usage and simulation of the task management system.
+See `ApplicationMain.java` for a sample usage and simulation of the task management system.
 
 ---
 
